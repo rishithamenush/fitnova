@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fitnova/config/app_config.dart';
-import 'package:fitnova/presentation/screens/main_screen.dart';
+import 'package:fitnova/presentation/screens/splash_screen.dart';
 import 'data/repositories/workout_repository_impl.dart';
 import 'presentation/screens/workout_screen.dart';
 
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      home: const SplashScreen(),
     );
   }
 }
