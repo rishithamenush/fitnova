@@ -13,7 +13,7 @@ class AppConfig {
   // Modern fitness color palette
   static const primaryColor = 0xFF5F2EEA;
   static const secondaryColor = 0xFF3D5AFE;
-  static const accentColor = 0xFF00F6A0;
+  static const accentColor = 0xFF002B36;
   static const backgroundColor = 0xFFF8F9FF;
   static const surfaceColor = 0xFFFFFFFF;
   static const textColor = 0xFF2E2E3A;
