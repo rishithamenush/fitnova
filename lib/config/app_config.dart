@@ -12,14 +12,14 @@ class AppConfig {
   // Theme configuration
   // Modern fitness color palette
   static const primaryColor = 0xFF5F2EEA;
-  static const secondaryColor = 0xFF3D5AFE; // Light Blue
-  static const accentColor = 0xFF00F6A0; // Sky Blue
-  static const backgroundColor = 0xFFF8F9FF; // Light Gray Background
-  static const surfaceColor = 0xFFFFFFFF; // White
-  static const textColor = 0xFF2E2E3A; // Near Black
-  static const errorColor = 0xFFFF3B30; // Error Red
-  static const successColor = 0xFF388E3C; // Success Green
-  static const warningColor = 0xFFFF9500; // Warning Yellow
+  static const secondaryColor = 0xFF3D5AFE;
+  static const accentColor = 0xFF00F6A0;
+  static const backgroundColor = 0xFFF8F9FF;
+  static const surfaceColor = 0xFFFFFFFF;
+  static const textColor = 0xFF2E2E3A;
+  static const errorColor = 0xFFFF3B30;
+  static const successColor = 0xFF388E3C;
+  static const warningColor = 0xFFFF9500;
 
   // Gradient colors
   static const gradientStart = 0xFF5F2EEA; // Modern Blue
