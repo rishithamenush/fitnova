@@ -42,6 +42,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
             expandedHeight: 250.0,
             floating: false,
             pinned: true,
+            automaticallyImplyLeading: false,
             backgroundColor: widget.categoryColor,
             flexibleSpace: FlexibleSpaceBar(
               title: Column(
