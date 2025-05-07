@@ -5,6 +5,150 @@ import 'package:fitnova/config/app_config.dart';
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
+  bool _isTodayWorkout() {
+    // Get current day of week (1-7, where 1 is Monday)
+    final now = DateTime.now();
+    final currentDay = now.weekday;
+    
+    // Check if today is a workout day (Monday, Wednesday, or Friday)
+    return currentDay == 1 || currentDay == 3 || currentDay == 5;
+  }
+
+  String _getTodayWorkoutDay() {
+    final now = DateTime.now();
+    final currentDay = now.weekday;
+    
+    switch (currentDay) {
+      case 1: // Monday
+        return 'Day 1 - Chest & Triceps';
+      case 3: // Wednesday
+        return 'Day 2 - Shoulders & Back';
+      case 5: // Friday
+        return 'Day 3 - Legs & Biceps';
+      default:
+        return 'No workout scheduled for today';
+    }
+  }
+
+  void _showWorkoutDialog(BuildContext context) {
+    String getWorkoutIcon() {
+      final now = DateTime.now();
+      final currentDay = now.weekday;
+      
+      switch (currentDay) {
+        case 1: // Monday
+          return 'assets/icons/chest.png';
+        case 3: // Wednesday
+          return 'assets/icons/shoulders_.png';
+        case 5: // Friday
+          return 'assets/icons/legs_.png';
+        default:
+          return 'assets/icons/chest.png'; // Default icon
+      }
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: const Color(AppConfig.primaryColor).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    getWorkoutIcon(),
+                    width: 40,
+                    height: 40,
+                    color: const Color(AppConfig.primaryColor),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Today\'s Workout',
+                  style: GoogleFonts.poppins(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(AppConfig.primaryColor),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  _getTodayWorkoutDay(),
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Close',
+                        style: GoogleFonts.poppins(
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        // TODO: Navigate to workout screen
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(AppConfig.primaryColor),
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: Text(
+                        'Start Workout',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,14 +205,30 @@ class HomeHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(4),
-
-                child: const Icon(
-                  Icons.notifications,
-                  color: Colors.white,
-                  size: 30,
-                ),
+              Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    onPressed: () => _showWorkoutDialog(context),
+                  ),
+                  if (_isTodayWorkout())
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
