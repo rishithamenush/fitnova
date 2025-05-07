@@ -69,6 +69,19 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
     }
   }
 
+  String _getWorkoutIcon(String title) {
+    switch (title.toLowerCase()) {
+      case 'chest & triceps':
+        return 'assets/icons/chest_.png';
+      case 'shoulders & back':
+        return 'assets/icons/shoulders_.png';
+      case 'legs & biceps':
+        return 'assets/icons/legs_.png';
+      default:
+        return 'assets/icons/chest_.png';
+    }
+  }
+
   Color _getColorForDay(int day) {
     switch (day) {
       case 1:
@@ -259,10 +272,11 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                                                         ),
                                                       ],
                                                     ),
-                                                    child: Icon(
-                                                      Icons.fitness_center,
+                                                    child: Image.asset(
+                                                      _getWorkoutIcon(workout.title),
+                                                      width: 32,
+                                                      height: 32,
                                                       color: Colors.white,
-                                                      size: 32,
                                                     ),
                                                   ),
                                                   const SizedBox(width: 16),
