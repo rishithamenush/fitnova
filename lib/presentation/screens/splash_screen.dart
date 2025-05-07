@@ -17,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
+    print('SplashScreen: initState called');
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -35,13 +36,19 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   void dispose() {
+    print('SplashScreen: dispose called');
     _controller.dispose();
     super.dispose();
   }
 
   Future<void> _navigateToHome() async {
+    print('SplashScreen: _navigateToHome called');
     await Future.delayed(const Duration(seconds: 5));
-    if (!mounted) return;
+    if (!mounted) {
+      print('SplashScreen: Widget not mounted, skipping navigation');
+      return;
+    }
+    print('SplashScreen: Navigating to MainScreen');
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const MainScreen()),
     );
@@ -49,6 +56,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    print('SplashScreen: build called');
     final size = MediaQuery.of(context).size;
     final padding = size.width * 0.05;
 

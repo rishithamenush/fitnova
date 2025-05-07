@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../domain/models/workout_model.dart';
 import '../../domain/repositories/workout_repository.dart';
 import 'workout_detail_screen.dart';
@@ -55,6 +56,32 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
     super.dispose();
   }
 
+  String _getImagePath(String title) {
+    switch (title.toLowerCase()) {
+      case 'chest & triceps':
+        return 'assets/images/chestWorkout.png';
+      case 'shoulders & back':
+        return 'assets/images/armsWorkout.png';
+      case 'legs & biceps':
+        return 'assets/images/legsWorkout.png';
+      default:
+        return 'assets/images/gymWorkout.png';
+    }
+  }
+
+  String _getWorkoutIcon(String title) {
+    switch (title.toLowerCase()) {
+      case 'chest & triceps':
+        return 'assets/icons/chest_.png';
+      case 'shoulders & back':
+        return 'assets/icons/shoulders_.png';
+      case 'legs & biceps':
+        return 'assets/icons/legs_.png';
+      default:
+        return 'assets/icons/chest_.png';
+    }
+  }
+
   Color _getColorForDay(int day) {
     switch (day) {
       case 1:
@@ -75,65 +102,74 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 200.0,
+            expandedHeight: 250.0,
             floating: false,
             pinned: true,
             backgroundColor: const Color(0xFF2196F3),
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                'Workout Plan',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      right: -20,
-                      bottom: -20,
-                      child: Icon(
-                        Icons.fitness_center,
-                        size: 150,
-                        color: Colors.white.withOpacity(0.2),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Your 3-Day Split',
                     style: GoogleFonts.poppins(
-                      fontSize: 24,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1A1A1A),
+                      color: Colors.white,
                     ),
-                  ),
+                  ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
                   const SizedBox(height: 8),
                   Text(
                     'Select a day to view your workout routine',
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.grey[600],
+                      fontSize: 12,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideY(begin: 0.3, end: 0),
+                ],
+              ),
+              titlePadding: const EdgeInsets.only(left: 20, bottom: 20),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    'assets/images/gymWorkout.png',
+                    fit: BoxFit.cover,
+                    color: Colors.black.withOpacity(0.3),
+                    colorBlendMode: BlendMode.darken,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.7),
+                          Colors.black.withOpacity(0.3),
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  Positioned(
+                    right: -20,
+                    bottom: -20,
+                    child: Icon(
+                      Icons.fitness_center,
+                      size: 150,
+                      color: Colors.white.withOpacity(0.1),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   if (_isLoading)
                     const Center(child: CircularProgressIndicator())
                   else
@@ -155,7 +191,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                           final color = _getColorForDay(dayNumber);
                           
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
+                            padding: const EdgeInsets.only(bottom: 20.0),
                             child: Hero(
                               tag: 'workout-${workout.day}',
                               child: Material(
@@ -174,36 +210,50 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                                       ),
                                     );
                                   },
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(24),
                                   child: Container(
-                                    height: 180,
+                                    height: 200,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(24),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: color.withOpacity(0.2),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 5),
+                                          color: color.withOpacity(0.4),
+                                          blurRadius: 15,
+                                          offset: const Offset(0, 8),
                                         ),
                                       ],
                                     ),
                                     child: Stack(
                                       children: [
+                                        // Background Image
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(24),
+                                          child: Image.asset(
+                                            _getImagePath(workout.title),
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            color: Colors.black.withOpacity(0.2),
+                                            colorBlendMode: BlendMode.darken,
+                                          ),
+                                        ),
+                                        // Gradient Overlay
                                         Container(
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
+                                            borderRadius: BorderRadius.circular(24),
                                             gradient: LinearGradient(
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                               colors: [
-                                                color.withOpacity(0.8),
-                                                color,
+                                                color.withOpacity(0.9),
+                                                color.withOpacity(0.3),
                                               ],
                                             ),
                                           ),
                                         ),
+                                        // Content
                                         Padding(
-                                          padding: const EdgeInsets.all(20.0),
+                                          padding: const EdgeInsets.all(24.0),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
@@ -213,12 +263,20 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                                                     padding: const EdgeInsets.all(12),
                                                     decoration: BoxDecoration(
                                                       color: Colors.white.withOpacity(0.2),
-                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderRadius: BorderRadius.circular(16),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black.withOpacity(0.1),
+                                                          blurRadius: 8,
+                                                          offset: const Offset(0, 4),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    child: Icon(
-                                                      Icons.fitness_center,
+                                                    child: Image.asset(
+                                                      _getWorkoutIcon(workout.title),
+                                                      width: 32,
+                                                      height: 32,
                                                       color: Colors.white,
-                                                      size: 32,
                                                     ),
                                                   ),
                                                   const SizedBox(width: 16),
@@ -229,16 +287,30 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                                                         Text(
                                                           workout.day,
                                                           style: GoogleFonts.poppins(
-                                                            fontSize: 24,
+                                                            fontSize: 28,
                                                             fontWeight: FontWeight.bold,
                                                             color: Colors.white,
+                                                            shadows: [
+                                                              Shadow(
+                                                                color: Colors.black.withOpacity(0.3),
+                                                                offset: const Offset(0, 2),
+                                                                blurRadius: 4,
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
                                                         Text(
                                                           workout.title,
                                                           style: GoogleFonts.poppins(
-                                                            fontSize: 18,
+                                                            fontSize: 20,
                                                             color: Colors.white.withOpacity(0.9),
+                                                            shadows: [
+                                                              Shadow(
+                                                                color: Colors.black.withOpacity(0.2),
+                                                                offset: const Offset(0, 1),
+                                                                blurRadius: 2,
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
                                                       ],
@@ -250,15 +322,74 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  _buildInfoChip(
-                                                    Icons.fitness_center,
-                                                    '${workout.exercises.length} Exercises',
-                                                    Colors.white,
+                                                  Container(
+                                                    padding: const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 6,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white.withOpacity(0.2),
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black.withOpacity(0.1),
+                                                          blurRadius: 8,
+                                                          offset: const Offset(0, 4),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.fitness_center,
+                                                          color: Colors.white,
+                                                          size: 16,
+                                                        ),
+                                                        const SizedBox(width: 4),
+                                                        Text(
+                                                          '${workout.exercises.length} Exercises',
+                                                          style: GoogleFonts.poppins(
+                                                            color: Colors.white,
+                                                            fontWeight: FontWeight.w600,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  _buildInfoChip(
-                                                    Icons.timer,
-                                                    '60 min',
-                                                    Colors.white,
+                                                  Container(
+                                                    padding: const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 8,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white.withOpacity(0.2),
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black.withOpacity(0.1),
+                                                          blurRadius: 8,
+                                                          offset: const Offset(0, 4),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          'View Details',
+                                                          style: GoogleFonts.poppins(
+                                                            color: Colors.white,
+                                                            fontWeight: FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 8),
+                                                        const Icon(
+                                                          Icons.arrow_forward,
+                                                          color: Colors.white,
+                                                          size: 20,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -270,38 +401,13 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                                   ),
                                 ),
                               ),
-                            ),
+                            ).animate(delay: (200 * index).ms).fadeIn(duration: 600.ms).slideX(begin: 0.2, end: 0),
                           );
                         },
                       ),
                     ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoChip(IconData icon, String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 16),
-          const SizedBox(width: 4),
-          Text(
-            text,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: color,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ],

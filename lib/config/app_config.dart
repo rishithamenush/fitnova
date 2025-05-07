@@ -11,19 +11,19 @@ class AppConfig {
 
   // Theme configuration
   // Modern fitness color palette
-  static const primaryColor = 0xFF1E88E5; // Modern Blue
-  static const secondaryColor = 0xFF42A5F5; // Light Blue
-  static const accentColor = 0xFF64B5F6; // Sky Blue
-  static const backgroundColor = 0xFFF5F7FA; // Light Gray Background
-  static const surfaceColor = 0xFFFFFFFF; // White
-  static const textColor = 0xFF1A1A1A; // Near Black
-  static const errorColor = 0xFFE53935; // Error Red
-  static const successColor = 0xFF43A047; // Success Green
-  static const warningColor = 0xFFFFB300; // Warning Yellow
+  static const primaryColor = 0xFF5F2EEA;
+  static const secondaryColor = 0xFF3D5AFE;
+  static const accentColor = 0xFF002B36;
+  static const backgroundColor = 0xFFF8F9FF;
+  static const surfaceColor = 0xFFFFFFFF;
+  static const textColor = 0xFF2E2E3A;
+  static const errorColor = 0xFFFF3B30;
+  static const successColor = 0xFF388E3C;
+  static const warningColor = 0xFFFF9500;
 
   // Gradient colors
-  static const gradientStart = 0xFF1E88E5; // Modern Blue
-  static const gradientEnd = 0xFF42A5F5; // Light Blue
+  static const gradientStart = 0xFF5F2EEA; // Modern Blue
+  static const gradientEnd = 0xFF3D5AFE; // Light Blue
 
   // Font families
   static const String primaryFont = 'Poppins';

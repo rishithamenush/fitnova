@@ -78,6 +78,24 @@ class SplashLogo extends StatelessWidget {
           width: logoSize,
           height: logoSize,
           fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) {
+            print('Error loading splash logo: $error');
+            return Container(
+              width: logoSize,
+              height: logoSize,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Icon(
+                  Icons.error_outline,
+                  color: Colors.white,
+                  size: 40,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
