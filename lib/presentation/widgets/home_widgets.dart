@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fitnova/config/app_config.dart';
+import 'package:fitnova/data/repositories/workout_repository_impl.dart';
+import 'package:fitnova/presentation/screens/workout_detail_screen.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -44,6 +46,35 @@ class HomeHeader extends StatelessWidget {
           return 'assets/icons/legs_.png';
         default:
           return 'assets/icons/chest.png'; // Default icon
+      }
+    }
+
+    int getWorkoutDay() {
+      final now = DateTime.now();
+      final currentDay = now.weekday;
+      
+      switch (currentDay) {
+        case 1: // Monday
+          return 1;
+        case 3: // Wednesday
+          return 2;
+        case 5: // Friday
+          return 3;
+        default:
+          return 1; // Default to Day 1
+      }
+    }
+
+    Color getWorkoutColor(int day) {
+      switch (day) {
+        case 1:
+          return const Color(0xFF2196F3); // Blue for Chest
+        case 2:
+          return const Color(0xFFE91E63); // Pink for Shoulders
+        case 3:
+          return const Color(0xFF4CAF50); // Green for Legs
+        default:
+          return const Color(0xFF2196F3);
       }
     }
 
@@ -122,7 +153,18 @@ class HomeHeader extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        // TODO: Navigate to workout screen
+                        final day = getWorkoutDay();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkoutDetailScreen(
+                              category: _getTodayWorkoutDay(),
+                              categoryColor: getWorkoutColor(day),
+                              dayNumber: day,
+                              repository: WorkoutRepositoryImpl(),
+                            ),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(AppConfig.primaryColor),
