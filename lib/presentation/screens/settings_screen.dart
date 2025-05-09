@@ -63,12 +63,46 @@ class SettingsScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       elevation: 0,
       flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          'Settings',
-          style: GoogleFonts.poppins(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey[800],
+        titlePadding: const EdgeInsets.only(bottom: 16),
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Color(AppConfig.primaryColor).withOpacity(0.1),
+                Color(AppConfig.primaryColor).withOpacity(0.05),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Color(AppConfig.primaryColor).withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.settings,
+                color: Color(AppConfig.primaryColor),
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Settings',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Color(AppConfig.primaryColor),
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
           ),
         ),
         centerTitle: true,
@@ -90,6 +124,38 @@ class SettingsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.1),
                 backgroundBlendMode: BlendMode.overlay,
+              ),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [
+                      Color(AppConfig.primaryColor).withOpacity(0.1),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [
+                      Color(AppConfig.primaryColor).withOpacity(0.1),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -157,19 +223,21 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Rishitha Menusha',
                     style: GoogleFonts.poppins(
-                      fontSize: 20,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey[800],
                     ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                   const SizedBox(height: 4),
                   _buildPremiumBadge(),
@@ -705,27 +773,42 @@ class SettingsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: Color(AppConfig.primaryColor).withOpacity(0.1),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(AppConfig.goldColor),
+            Color(AppConfig.goldAccentColor),
+          ],
+        ),
         borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Color(AppConfig.goldShadowColor).withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.star,
-            size: 16,
-            color: Color(AppConfig.primaryColor),
+            size: 14,
+            color: Colors.grey[800],
           ),
           const SizedBox(width: 4),
           Flexible(
             child: Text(
-              'Premium Member',
+              'Premium',
               style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Color(AppConfig.primaryColor),
-                fontWeight: FontWeight.w500,
+                fontSize: 12,
+                color: Colors.grey[800],
+                fontWeight: FontWeight.w600,
               ),
               overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ],
