@@ -37,8 +37,6 @@ class SettingsScreen extends StatelessWidget {
                     children: [
                       _buildProfileSection(),
                       const SizedBox(height: 24),
-                      _buildWorkoutSettings(context),
-                      const SizedBox(height: 24),
                       _buildAppSettings(context),
                       const SizedBox(height: 24),
                       _buildSupportSection(),
@@ -57,105 +55,88 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildAppBar() {
     return SliverAppBar(
-      expandedHeight: 120,
-      floating: true,
+      expandedHeight: 250.0,
+      floating: false,
       pinned: true,
-      backgroundColor: Colors.white,
-      elevation: 0,
+      backgroundColor: Color(AppConfig.primaryColor),
       flexibleSpace: FlexibleSpaceBar(
-        titlePadding: const EdgeInsets.only(bottom: 16),
-        title: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                Color(AppConfig.primaryColor).withOpacity(0.1),
-                Color(AppConfig.primaryColor).withOpacity(0.05),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Color(AppConfig.primaryColor).withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.settings,
-                color: Color(AppConfig.primaryColor),
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Settings',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: Color(AppConfig.primaryColor),
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        background: Stack(
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Settings',
+              style: GoogleFonts.poppins(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.3),
+                    offset: const Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+            ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Customize your experience',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideY(begin: 0.3, end: 0),
+          ],
+        ),
+        titlePadding: const EdgeInsets.only(left: 20, bottom: 20),
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              'assets/images/settings.png',
+              fit: BoxFit.cover,
+              color: Colors.black.withOpacity(0.3),
+              colorBlendMode: BlendMode.darken,
+            ),
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                   colors: [
-                    Color(AppConfig.primaryColor).withOpacity(0.1),
-                    Color(AppConfig.primaryColor).withOpacity(0.05),
+                    Colors.black.withOpacity(0.7),
+                    Color(AppConfig.primaryColor).withOpacity(0.3),
                   ],
                 ),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
+            Positioned(
+              right: -20,
+              bottom: -20,
+              child: Icon(
+                Icons.settings,
+                size: 150,
                 color: Colors.white.withOpacity(0.1),
-                backgroundBlendMode: BlendMode.overlay,
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [
-                      Color(AppConfig.primaryColor).withOpacity(0.1),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [
-                      Color(AppConfig.primaryColor).withOpacity(0.1),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
               ),
             ),
           ],
@@ -263,177 +244,6 @@ class SettingsScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildWorkoutSettings(BuildContext context) {
-    return Consumer<SettingsProvider>(
-      builder: (context, settings, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSectionTitle('Workout Settings'),
-            const SizedBox(height: 16),
-            GlassmorphicContainer(
-              width: double.infinity,
-              height: 320,
-              borderRadius: 20,
-              blur: 10,
-              border: 2,
-              linearGradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.white.withOpacity(0.2),
-                  Colors.white.withOpacity(0.05),
-                ],
-              ),
-              borderGradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(AppConfig.primaryColor).withOpacity(0.5),
-                  Color(AppConfig.primaryColor).withOpacity(0.1),
-                ],
-              ),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      _buildRestTimeSetting(context, settings),
-                      const Divider(height: 32),
-                      _buildSettingItem(
-                        icon: Icons.speed,
-                        title: 'Units',
-                        subtitle: 'Change measurement units',
-                        onTap: () {
-                          // TODO: Handle units setting
-                        },
-                      ),
-                      const Divider(height: 32),
-                      _buildSettingItem(
-                        icon: Icons.music_note,
-                        title: 'Workout Music',
-                        subtitle: 'Connect to music services',
-                        onTap: () {
-                          // TODO: Handle music setting
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildRestTimeSetting(BuildContext context, SettingsProvider settings) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Rest Time',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Time between sets',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Color(AppConfig.primaryColor).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(AppConfig.primaryColor).withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Text(
-                '${settings.restTime}s',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(AppConfig.primaryColor),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        SliderTheme(
-          data: SliderThemeData(
-            activeTrackColor: Color(AppConfig.primaryColor),
-            inactiveTrackColor: Color(AppConfig.primaryColor).withOpacity(0.2),
-            thumbColor: Color(AppConfig.primaryColor),
-            overlayColor: Color(AppConfig.primaryColor).withOpacity(0.1),
-            valueIndicatorColor: Color(AppConfig.primaryColor),
-            valueIndicatorTextStyle: GoogleFonts.poppins(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
-            trackHeight: 4,
-            thumbShape: const RoundSliderThumbShape(
-              enabledThumbRadius: 12,
-              elevation: 4,
-            ),
-            overlayShape: const RoundSliderOverlayShape(
-              overlayRadius: 24,
-            ),
-          ),
-          child: Slider(
-            value: settings.restTime.toDouble(),
-            min: 0,
-            max: 180,
-            divisions: 36,
-            label: '${settings.restTime}s',
-            onChanged: (value) {
-              settings.setRestTime(value.toInt());
-            },
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '0s',
-              style: GoogleFonts.poppins(
-                color: Colors.grey[600],
-              ),
-            ),
-            Text(
-              '180s',
-              style: GoogleFonts.poppins(
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 
@@ -594,6 +404,7 @@ class SettingsScreen extends StatelessWidget {
     required String title,
     required String subtitle,
     required VoidCallback onTap,
+    String? image,
   }) {
     return InkWell(
       onTap: onTap,
@@ -602,21 +413,34 @@ class SettingsScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(AppConfig.primaryColor).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(AppConfig.primaryColor).withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+            if (image != null)
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: AssetImage(image),
+                    fit: BoxFit.cover,
                   ),
-                ],
+                ),
+              )
+            else
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Color(AppConfig.primaryColor).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(AppConfig.primaryColor).withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Icon(icon, color: Color(AppConfig.primaryColor)),
               ),
-              child: Icon(icon, color: Color(AppConfig.primaryColor)),
-            ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
