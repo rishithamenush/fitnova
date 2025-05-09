@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:fitnova/config/app_config.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:provider/provider.dart';
 import '../../providers/settings_provider.dart';
+import '../../config/app_config.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -17,24 +17,36 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FE),
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           _buildAppBar(),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildProfileSection(),
-                  const SizedBox(height: 24),
-                  _buildWorkoutSettings(context),
-                  const SizedBox(height: 24),
-                  _buildAppSettings(context),
-                  const SizedBox(height: 24),
-                  _buildSupportSection(),
-                  const SizedBox(height: 24),
-                  _buildLogoutButton(context),
-                ],
+            child: AnimationLimiter(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(milliseconds: 600),
+                    childAnimationBuilder: (widget) => SlideAnimation(
+                      horizontalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: widget,
+                      ),
+                    ),
+                    children: [
+                      _buildProfileSection(),
+                      const SizedBox(height: 24),
+                      _buildWorkoutSettings(context),
+                      const SizedBox(height: 24),
+                      _buildAppSettings(context),
+                      const SizedBox(height: 24),
+                      _buildSupportSection(),
+                      const SizedBox(height: 24),
+                      _buildLogoutButton(context),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -60,100 +72,130 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        background: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(AppConfig.primaryColor).withOpacity(0.1),
-                Color(AppConfig.primaryColor).withOpacity(0.05),
-              ],
+        background: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(AppConfig.primaryColor).withOpacity(0.1),
+                    Color(AppConfig.primaryColor).withOpacity(0.05),
+                  ],
+                ),
+              ),
             ),
-          ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                backgroundBlendMode: BlendMode.overlay,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildProfileSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
+    return GlassmorphicContainer(
+      width: double.infinity,
+      height: 120,
+      borderRadius: 20,
+      blur: 10,
+      border: 2,
+      linearGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.white.withOpacity(0.2),
+          Colors.white.withOpacity(0.05),
         ],
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Color(AppConfig.primaryColor).withOpacity(0.5),
-                width: 2,
+      borderGradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(AppConfig.primaryColor).withOpacity(0.5),
+          Color(AppConfig.primaryColor).withOpacity(0.1),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Shimmer.fromColors(
+              baseColor: Color(AppConfig.primaryColor).withOpacity(0.1),
+              highlightColor: Color(AppConfig.primaryColor).withOpacity(0.3),
+              child: Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Color(AppConfig.primaryColor).withOpacity(0.5),
+                    width: 2,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40),
+                  child: Image.asset(
+                    'assets/images/profile.jpg',
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Color(AppConfig.primaryColor).withOpacity(0.1),
+                        child: Icon(
+                          Icons.person,
+                          size: 40,
+                          color: Color(AppConfig.primaryColor),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-              child: Image.asset(
-                'assets/images/profile.jpg',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Color(AppConfig.primaryColor).withOpacity(0.1),
-                    child: Icon(
-                      Icons.person,
-                      size: 40,
-                      color: Color(AppConfig.primaryColor),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Rishitha Menusha',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
                     ),
-                  );
-                },
+                  ),
+                  const SizedBox(height: 4),
+                  _buildPremiumBadge(),
+                ],
               ),
             ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Rishitha Menusha',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
-                  ),
+            IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Color(AppConfig.primaryColor).withOpacity(0.1),
+                  shape: BoxShape.circle,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Premium Member',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Color(AppConfig.primaryColor),
-                    fontWeight: FontWeight.w500,
-                  ),
+                child: Icon(
+                  Icons.edit_outlined,
+                  color: Color(AppConfig.primaryColor),
                 ),
-              ],
+              ),
+              onPressed: () {
+                // TODO: Handle edit profile
+              },
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.edit_outlined, color: Color(AppConfig.primaryColor)),
-            onPressed: () {
-              // TODO: Handle edit profile
-            },
-          ),
-        ],
+          ],
+        ),
       ),
-    ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0);
+    );
   }
 
   Widget _buildWorkoutSettings(BuildContext context) {
@@ -164,45 +206,60 @@ class SettingsScreen extends StatelessWidget {
           children: [
             _buildSectionTitle('Workout Settings'),
             const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
+            GlassmorphicContainer(
+              width: double.infinity,
+              height: 320,
+              borderRadius: 20,
+              blur: 10,
+              border: 2,
+              linearGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withOpacity(0.2),
+                  Colors.white.withOpacity(0.05),
                 ],
               ),
-              child: Column(
-                children: [
-                  _buildRestTimeSetting(context, settings),
-                  const Divider(height: 32),
-                  _buildSettingItem(
-                    icon: Icons.speed,
-                    title: 'Units',
-                    subtitle: 'Change measurement units',
-                    onTap: () {
-                      // TODO: Handle units setting
-                    },
-                  ),
-                  const Divider(height: 32),
-                  _buildSettingItem(
-                    icon: Icons.music_note,
-                    title: 'Workout Music',
-                    subtitle: 'Connect to music services',
-                    onTap: () {
-                      // TODO: Handle music setting
-                    },
-                  ),
+              borderGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(AppConfig.primaryColor).withOpacity(0.5),
+                  Color(AppConfig.primaryColor).withOpacity(0.1),
                 ],
+              ),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      _buildRestTimeSetting(context, settings),
+                      const Divider(height: 32),
+                      _buildSettingItem(
+                        icon: Icons.speed,
+                        title: 'Units',
+                        subtitle: 'Change measurement units',
+                        onTap: () {
+                          // TODO: Handle units setting
+                        },
+                      ),
+                      const Divider(height: 32),
+                      _buildSettingItem(
+                        icon: Icons.music_note,
+                        title: 'Workout Music',
+                        subtitle: 'Connect to music services',
+                        onTap: () {
+                          // TODO: Handle music setting
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
-        ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideY(begin: 0.3, end: 0);
+        );
       },
     );
   }
@@ -240,6 +297,13 @@ class SettingsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(AppConfig.primaryColor).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(AppConfig.primaryColor).withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Text(
                 '${settings.restTime}s',
@@ -263,6 +327,14 @@ class SettingsScreen extends StatelessWidget {
             valueIndicatorTextStyle: GoogleFonts.poppins(
               color: Colors.white,
               fontWeight: FontWeight.w600,
+            ),
+            trackHeight: 4,
+            thumbShape: const RoundSliderThumbShape(
+              enabledThumbRadius: 12,
+              elevation: 4,
+            ),
+            overlayShape: const RoundSliderOverlayShape(
+              overlayRadius: 24,
             ),
           ),
           child: Slider(
@@ -303,55 +375,70 @@ class SettingsScreen extends StatelessWidget {
       children: [
         _buildSectionTitle('App Settings'),
         const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
+        GlassmorphicContainer(
+          width: double.infinity,
+          height: 280,
+          borderRadius: 20,
+          blur: 10,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.2),
+              Colors.white.withOpacity(0.05),
             ],
           ),
-          child: Column(
-            children: [
-              _buildToggleItem(
-                icon: Icons.dark_mode,
-                title: 'Dark Mode',
-                subtitle: 'Switch between light and dark theme',
-                value: false,
-                onChanged: (value) {
-                  // TODO: Handle dark mode
-                },
-              ),
-              const Divider(height: 32),
-              _buildToggleItem(
-                icon: Icons.notifications,
-                title: 'Notifications',
-                subtitle: 'Enable/disable workout reminders',
-                value: true,
-                onChanged: (value) {
-                  // TODO: Handle notifications
-                },
-              ),
-              const Divider(height: 32),
-              _buildToggleItem(
-                icon: Icons.volume_up,
-                title: 'Sound Effects',
-                subtitle: 'Enable/disable workout sounds',
-                value: true,
-                onChanged: (value) {
-                  // TODO: Handle sound effects
-                },
-              ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(AppConfig.primaryColor).withOpacity(0.5),
+              Color(AppConfig.primaryColor).withOpacity(0.1),
             ],
+          ),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  _buildToggleItem(
+                    icon: Icons.dark_mode,
+                    title: 'Dark Mode',
+                    subtitle: 'Switch between light and dark theme',
+                    value: false,
+                    onChanged: (value) {
+                      // TODO: Handle dark mode
+                    },
+                  ),
+                  const Divider(height: 32),
+                  _buildToggleItem(
+                    icon: Icons.notifications,
+                    title: 'Notifications',
+                    subtitle: 'Enable/disable workout reminders',
+                    value: true,
+                    onChanged: (value) {
+                      // TODO: Handle notifications
+                    },
+                  ),
+                  const Divider(height: 32),
+                  _buildToggleItem(
+                    icon: Icons.volume_up,
+                    title: 'Sound Effects',
+                    subtitle: 'Enable/disable workout sounds',
+                    value: true,
+                    onChanged: (value) {
+                      // TODO: Handle sound effects
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideY(begin: 0.3, end: 0);
+    );
   }
 
   Widget _buildSupportSection() {
@@ -360,52 +447,67 @@ class SettingsScreen extends StatelessWidget {
       children: [
         _buildSectionTitle('Support'),
         const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
+        GlassmorphicContainer(
+          width: double.infinity,
+          height: 280,
+          borderRadius: 20,
+          blur: 10,
+          border: 2,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.2),
+              Colors.white.withOpacity(0.05),
             ],
           ),
-          child: Column(
-            children: [
-              _buildSettingItem(
-                icon: Icons.help_outline,
-                title: 'Help Center',
-                subtitle: 'Get help with the app',
-                onTap: () {
-                  // TODO: Handle help center
-                },
-              ),
-              const Divider(height: 32),
-              _buildSettingItem(
-                icon: Icons.info_outline,
-                title: 'About',
-                subtitle: 'App version and information',
-                onTap: () {
-                  // TODO: Handle about
-                },
-              ),
-              const Divider(height: 32),
-              _buildSettingItem(
-                icon: Icons.privacy_tip_outlined,
-                title: 'Privacy Policy',
-                subtitle: 'Read our privacy policy',
-                onTap: () {
-                  // TODO: Handle privacy policy
-                },
-              ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(AppConfig.primaryColor).withOpacity(0.5),
+              Color(AppConfig.primaryColor).withOpacity(0.1),
             ],
+          ),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  _buildSettingItem(
+                    icon: Icons.help_outline,
+                    title: 'Help Center',
+                    subtitle: 'Get help with the app',
+                    onTap: () {
+                      // TODO: Handle help center
+                    },
+                  ),
+                  const Divider(height: 32),
+                  _buildSettingItem(
+                    icon: Icons.info_outline,
+                    title: 'About',
+                    subtitle: 'App version and information',
+                    onTap: () {
+                      // TODO: Handle about
+                    },
+                  ),
+                  const Divider(height: 32),
+                  _buildSettingItem(
+                    icon: Icons.privacy_tip_outlined,
+                    title: 'Privacy Policy',
+                    subtitle: 'Read our privacy policy',
+                    onTap: () {
+                      // TODO: Handle privacy policy
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 600.ms, duration: 600.ms).slideY(begin: 0.3, end: 0);
+    );
   }
 
   Widget _buildSectionTitle(String title) {
@@ -437,6 +539,13 @@ class SettingsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(AppConfig.primaryColor).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(AppConfig.primaryColor).withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Icon(icon, color: Color(AppConfig.primaryColor)),
             ),
@@ -464,9 +573,16 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: Colors.grey[400],
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.chevron_right,
+                color: Colors.grey[400],
+              ),
             ),
           ],
         ),
@@ -490,6 +606,13 @@ class SettingsScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: Color(AppConfig.primaryColor).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(AppConfig.primaryColor).withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Icon(icon, color: Color(AppConfig.primaryColor)),
           ),
@@ -521,6 +644,7 @@ class SettingsScreen extends StatelessWidget {
             value: value,
             onChanged: onChanged,
             activeColor: Color(AppConfig.primaryColor),
+            activeTrackColor: Color(AppConfig.primaryColor).withOpacity(0.5),
           ),
         ],
       ),
@@ -532,13 +656,32 @@ class SettingsScreen extends StatelessWidget {
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.1),
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            Colors.red.withOpacity(0.1),
+            Colors.red.withOpacity(0.05),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.red.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: TextButton(
         onPressed: () {
           // TODO: Handle logout
         },
+        style: TextButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -555,6 +698,38 @@ class SettingsScreen extends StatelessWidget {
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 800.ms, duration: 600.ms).slideY(begin: 0.3, end: 0);
+    );
+  }
+
+  Widget _buildPremiumBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: Color(AppConfig.primaryColor).withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.star,
+            size: 16,
+            color: Color(AppConfig.primaryColor),
+          ),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              'Premium Member',
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Color(AppConfig.primaryColor),
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 } 
