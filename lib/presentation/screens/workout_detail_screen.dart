@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../domain/entities/exercise.dart';
 import '../../domain/models/workout_model.dart';
 import '../../domain/repositories/workout_repository.dart';
+import '../../presentation/screens/active_workout_screen.dart';
 
 class WorkoutDetailScreen extends StatefulWidget {
   final String category;
@@ -175,20 +176,37 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: Implement start workout functionality
+      floatingActionButton: FutureBuilder<WorkoutModel>(
+        future: _workoutFuture,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+
+          return FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ActiveWorkoutScreen(
+                    workout: snapshot.data!,
+                    categoryColor: widget.categoryColor,
+                  ),
+                ),
+              );
+            },
+            backgroundColor: widget.categoryColor,
+            elevation: 8,
+            icon: const Icon(Icons.play_arrow),
+            label: Text(
+              'Start Workout',
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideY(begin: 0.3, end: 0);
         },
-        backgroundColor: widget.categoryColor,
-        elevation: 8,
-        icon: const Icon(Icons.play_arrow),
-        label: Text(
-          'Start Workout',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideY(begin: 0.3, end: 0),
+      ),
     );
   }
 
