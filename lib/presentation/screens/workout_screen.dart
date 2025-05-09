@@ -1,3 +1,4 @@
+import 'package:fitnova/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -105,7 +106,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
             expandedHeight: 250.0,
             floating: false,
             pinned: true,
-            backgroundColor: const Color(0xFF2196F3),
+            backgroundColor: const Color(AppConfig.primaryColor),
             flexibleSpace: FlexibleSpaceBar(
               title: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -114,17 +115,43 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                   Text(
                     'Your 3-Day Split',
                     style: GoogleFonts.poppins(
-                      fontSize: 18,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.3),
+                          offset: const Offset(0, 2),
+                          blurRadius: 4,
+                        ),
+                      ],
                     ),
                   ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
                   const SizedBox(height: 8),
-                  Text(
-                    'Select a day to view your workout routine',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: Colors.white.withOpacity(0.9),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.fitness_center,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Select to view workout routine',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
                     ),
                   ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideY(begin: 0.3, end: 0),
                 ],
@@ -146,7 +173,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> with SingleTickerProvider
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.black.withOpacity(0.7),
-                          Colors.black.withOpacity(0.3),
+                          const Color(AppConfig.primaryColor).withOpacity(0.3),
                         ],
                       ),
                     ),
