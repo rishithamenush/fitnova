@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 import '../../domain/entities/exercise.dart';
 import '../../domain/models/workout_model.dart';
+import '../../providers/settings_provider.dart';
 
 class ActiveWorkoutScreen extends StatefulWidget {
   final WorkoutModel workout;
@@ -36,9 +38,10 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
   }
 
   void _startRestTimer() {
+    final restTime = context.read<SettingsProvider>().restTime;
     setState(() {
       _isResting = true;
-      _remainingTime = 60; // 60 seconds rest
+      _remainingTime = restTime;
     });
 
     _restTimer?.cancel();
@@ -219,9 +222,80 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
               ),
             ],
           ),
+          const SizedBox(height: 24),
+          _buildSetProgressIndicator(),
         ],
       ),
     ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0);
+  }
+
+  Widget _buildSetProgressIndicator() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Set Progress',
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey[700],
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(
+            _currentExercise.sets,
+            (index) {
+              final isCompleted = index < _currentSet - 1;
+              final isCurrent = index == _currentSet - 1;
+              
+              return Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: isCompleted
+                      ? widget.categoryColor
+                      : isCurrent
+                          ? widget.categoryColor.withOpacity(0.2)
+                          : Colors.grey[200],
+                  shape: BoxShape.circle,
+                  border: isCurrent
+                      ? Border.all(
+                          color: widget.categoryColor,
+                          width: 2,
+                        )
+                      : null,
+                ),
+                child: Center(
+                  child: isCompleted
+                      ? Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 20,
+                        )
+                      : Text(
+                          '${index + 1}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: isCurrent
+                                ? widget.categoryColor
+                                : Colors.grey[600],
+                          ),
+                        ),
+                ),
+              ).animate(
+                target: isCurrent ? 1 : 0,
+              ).scale(
+                duration: 400.ms,
+                curve: Curves.easeOutBack,
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildInstructionsCard() {
