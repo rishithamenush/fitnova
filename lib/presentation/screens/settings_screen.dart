@@ -58,89 +58,104 @@ class SettingsScreen extends StatelessWidget {
       expandedHeight: 250.0,
       floating: false,
       pinned: true,
-      backgroundColor: Color(AppConfig.primaryColor),
-      flexibleSpace: FlexibleSpaceBar(
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Settings',
-              style: GoogleFonts.poppins(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: const Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-            ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.settings,
+      backgroundColor: Colors.transparent,
+      collapsedHeight: 120.0,
+      flexibleSpace: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final top = constraints.biggest.height;
+          final expandedHeight = 250.0;
+          final collapsedHeight = 120.0;
+          final expandedPercentage = ((top - collapsedHeight) / (expandedHeight - collapsedHeight)).clamp(0.0, 1.0);
+
+          return FlexibleSpaceBar(
+            titlePadding: EdgeInsets.only(
+              left: 20,
+              bottom: 20,
+              top: MediaQuery.of(context).padding.top + 10,
+            ),
+            title: expandedPercentage > 0.5 ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Settings',
+                  style: GoogleFonts.poppins(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    size: 16,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.3),
+                        offset: const Offset(0, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Customize your experience',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 10,
+                ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.settings,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Customize your app preferences',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideY(begin: 0.3, end: 0),
+              ],
+            ) : null,
+            background: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  'assets/images/settings.png',
+                  fit: BoxFit.cover,
+                  color: Colors.black.withOpacity(0.2),
+                  colorBlendMode: BlendMode.darken,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.5),
+                        const Color(AppConfig.primaryColor).withOpacity(0.2),
+                      ],
+                      stops: const [0.0, 1.0],
                     ),
                   ),
-                ],
-              ),
-            ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideY(begin: 0.3, end: 0),
-          ],
-        ),
-        titlePadding: const EdgeInsets.only(left: 20, bottom: 20),
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(
-              'assets/images/settings.png',
-              fit: BoxFit.cover,
-              color: Colors.black.withOpacity(0.3),
-              colorBlendMode: BlendMode.darken,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.7),
-                    Color(AppConfig.primaryColor).withOpacity(0.3),
-                  ],
                 ),
-              ),
+                Positioned(
+                  right: -20,
+                  bottom: -20,
+                  child: Icon(
+                    Icons.settings,
+                    size: 150,
+                    color: Colors.white.withOpacity(0.1),
+                  ),
+                ),
+              ],
             ),
-            Positioned(
-              right: -20,
-              bottom: -20,
-              child: Icon(
-                Icons.settings,
-                size: 150,
-                color: Colors.white.withOpacity(0.1),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
