@@ -1,8 +1,10 @@
+import '../entities/exercise.dart';
+
 class WorkoutModel {
   final String day;
   final String title;
   final String warmup;
-  final List<ExerciseModel> exercises;
+  final List<Exercise> exercises;
 
   WorkoutModel({
     required this.day,
@@ -17,7 +19,7 @@ class WorkoutModel {
       title: json['title'],
       warmup: json['warmup'],
       exercises: (json['exercises'] as List)
-          .map((e) => ExerciseModel.fromJson(e))
+          .map((e) => Exercise.fromMap(e))
           .toList(),
     );
   }
@@ -27,7 +29,7 @@ class WorkoutModel {
       'day': day,
       'title': title,
       'warmup': warmup,
-      'exercises': exercises.map((e) => e.toJson()).toList(),
+      'exercises': exercises.map((e) => e.toMap()).toList(),
     };
   }
 }

@@ -33,6 +33,7 @@ class SplashBackground extends StatelessWidget {
               ],
               child: CustomPaint(
                 painter: GridPainter(
+                  progress: 0.0,
                   color: Colors.white.withOpacity(0.1),
                 ),
               ),
@@ -249,33 +250,45 @@ class SplashLoadingBar extends StatelessWidget {
 }
 
 class GridPainter extends CustomPainter {
+  final double progress;
   final Color color;
 
-  GridPainter({required this.color});
+  GridPainter({
+    required this.progress,
+    required this.color,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1;
+      ..color = color.withOpacity(0.1)
+      ..strokeWidth = 1.0;
 
-    final spacing = size.width * 0.05; // 5% of screen width
-    for (var i = 0; i < size.width; i += spacing as int) {
+    final spacing = size.width / 10;
+    final rows = (size.height / spacing).ceil();
+    final cols = (size.width / spacing).ceil();
+
+    for (var i = 0; i <= rows; i++) {
+      final y = i * spacing;
       canvas.drawLine(
-        Offset(i as double, 0),
-        Offset(i as double, size.height),
+        Offset(0, y),
+        Offset(size.width, y),
         paint,
       );
     }
-    for (var i = 0; i < size.height; i += spacing as int) {
+
+    for (var i = 0; i <= cols; i++) {
+      final x = i * spacing;
       canvas.drawLine(
-        Offset(0, i as double),
-        Offset(size.width, i as double),
+        Offset(x, 0),
+        Offset(x, size.height),
         paint,
       );
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(GridPainter oldDelegate) {
+    return oldDelegate.progress != progress || oldDelegate.color != color;
+  }
 } 

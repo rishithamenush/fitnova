@@ -28,4 +28,9 @@ class AppConfig {
   // Font families
   static const String primaryFont = 'Poppins';
   static const String secondaryFont = 'Montserrat';
+
+  // Colors
+  static const goldColor = 0xFFFFD700;
+  static const goldAccentColor = 0xFFFFC107;
+  static const goldShadowColor = 0xFFFFD700;
 } 

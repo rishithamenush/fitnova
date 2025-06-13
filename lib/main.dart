@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:fitnova/config/app_config.dart';
-import 'package:fitnova/presentation/screens/splash_screen.dart';
+import 'package:provider/provider.dart';
+import 'providers/settings_provider.dart';
+import 'presentation/screens/splash_screen.dart';
 import 'data/repositories/workout_repository_impl.dart';
 import 'presentation/screens/workout_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,15 +22,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: AppConfig.appName,
+      title: 'FitNova',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Color(AppConfig.primaryColor),
-          primary: Color(AppConfig.primaryColor),
-          secondary: Color(AppConfig.secondaryColor),
-        ),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const SplashScreen(),
     );

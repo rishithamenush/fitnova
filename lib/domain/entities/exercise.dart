@@ -6,6 +6,7 @@ class Exercise {
   final int reps;
   final double? weight;
   final bool isCompleted;
+  final String instructions;
 
   Exercise({
     this.id,
@@ -15,6 +16,7 @@ class Exercise {
     required this.reps,
     this.weight,
     this.isCompleted = false,
+    this.instructions = 'Focus on proper form and controlled movements. Maintain steady breathing throughout the exercise.',
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +28,7 @@ class Exercise {
       'reps': reps,
       'weight': weight,
       'is_completed': isCompleted ? 1 : 0,
+      'instructions': instructions,
     };
   }
 
@@ -38,6 +41,7 @@ class Exercise {
       reps: map['reps'],
       weight: map['weight'],
       isCompleted: map['is_completed'] == 1,
+      instructions: map['instructions'] ?? 'Focus on proper form and controlled movements. Maintain steady breathing throughout the exercise.',
     );
   }
 
@@ -49,6 +53,7 @@ class Exercise {
     int? reps,
     double? weight,
     bool? isCompleted,
+    String? instructions,
   }) {
     return Exercise(
       id: id ?? this.id,
@@ -58,6 +63,7 @@ class Exercise {
       reps: reps ?? this.reps,
       weight: weight ?? this.weight,
       isCompleted: isCompleted ?? this.isCompleted,
+      instructions: instructions ?? this.instructions,
     );
   }
 } 
