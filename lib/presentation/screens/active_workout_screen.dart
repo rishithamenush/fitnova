@@ -6,15 +6,22 @@ import 'dart:async';
 import '../../domain/entities/exercise.dart';
 import '../../domain/models/workout_model.dart';
 import '../../providers/settings_provider.dart';
+import '../../providers/workout_progress_provider.dart';
 
 class ActiveWorkoutScreen extends StatefulWidget {
   final WorkoutModel workout;
   final Color categoryColor;
+  final int? initialExerciseIndex;
+  final int? initialSet;
+  final List<int>? completedSets;
 
   const ActiveWorkoutScreen({
     super.key,
     required this.workout,
     required this.categoryColor,
+    this.initialExerciseIndex,
+    this.initialSet,
+    this.completedSets,
   });
 
   @override
@@ -22,14 +29,23 @@ class ActiveWorkoutScreen extends StatefulWidget {
 }
 
 class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
-  int _currentExerciseIndex = 0;
-  int _currentSet = 1;
+  late int _currentExerciseIndex;
+  late int _currentSet;
   int _remainingTime = 0;
   bool _isResting = false;
   bool _isCompleted = false;
   Timer? _restTimer;
+  late List<int> _completedSets;
 
   Exercise get _currentExercise => widget.workout.exercises[_currentExerciseIndex];
+
+  @override
+  void initState() {
+    super.initState();
+    _currentExerciseIndex = widget.initialExerciseIndex ?? 0;
+    _currentSet = widget.initialSet ?? 1;
+    _completedSets = widget.completedSets ?? List.filled(widget.workout.exercises.length, 0);
+  }
 
   @override
   void dispose() {
@@ -59,7 +75,20 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
     });
   }
 
-  void _completeSet() {
+  Future<void> _updateProgress() async {
+    final progressProvider = context.read<WorkoutProgressProvider>();
+    await progressProvider.updateProgress(
+      currentExerciseIndex: _currentExerciseIndex,
+      currentSet: _currentSet,
+      isCompleted: _isCompleted,
+      completedSets: _completedSets,
+    );
+  }
+
+  void _completeSet() async {
+    // Mark current set as completed
+    _completedSets[_currentExerciseIndex] = _currentSet;
+
     if (_currentSet < _currentExercise.sets) {
       setState(() {
         _currentSet++;
@@ -76,11 +105,15 @@ class _ActiveWorkoutScreenState extends State<ActiveWorkoutScreen> {
         _isCompleted = true;
       });
     }
+
+    await _updateProgress();
   }
 
   @override
   Widget build(BuildContext context) {
     if (_isCompleted) {
+      // Clear progress when workout is completed
+      context.read<WorkoutProgressProvider>().clearProgress();
       return _buildCompletionScreen();
     }
 

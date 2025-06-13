@@ -4,12 +4,14 @@ import 'providers/settings_provider.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'data/repositories/workout_repository_impl.dart';
 import 'presentation/screens/workout_screen.dart';
+import 'providers/workout_progress_provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => WorkoutProgressProvider()),
       ],
       child: const MyApp(),
     ),

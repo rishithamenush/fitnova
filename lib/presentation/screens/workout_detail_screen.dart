@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import '../../domain/entities/exercise.dart';
 import '../../domain/models/workout_model.dart';
 import '../../domain/repositories/workout_repository.dart';
 import '../../presentation/screens/active_workout_screen.dart';
+import '../../providers/workout_progress_provider.dart';
 
 class WorkoutDetailScreen extends StatefulWidget {
   final String category;
@@ -182,29 +184,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
           if (!snapshot.hasData) {
             return const SizedBox.shrink();
           }
-
-          return FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ActiveWorkoutScreen(
-                    workout: snapshot.data!,
-                    categoryColor: widget.categoryColor,
-                  ),
-                ),
-              );
-            },
-            backgroundColor: widget.categoryColor,
-            elevation: 8,
-            icon: const Icon(Icons.play_arrow),
-            label: Text(
-              'Start Workout',
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideY(begin: 0.3, end: 0);
+          return _buildStartButton(snapshot.data!);
         },
       ),
     );
@@ -481,6 +461,132 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildStartButton(WorkoutModel workout) {
+    return Consumer<WorkoutProgressProvider>(
+      builder: (context, progressProvider, child) {
+        final hasActiveWorkout = progressProvider.hasActiveWorkout(widget.dayNumber);
+        
+        return Container(
+          margin: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                widget.categoryColor,
+                widget.categoryColor.withOpacity(0.8),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: widget.categoryColor.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () async {
+                if (hasActiveWorkout) {
+                  if (!mounted) return;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActiveWorkoutScreen(
+                        workout: workout,
+                        categoryColor: widget.categoryColor,
+                        initialExerciseIndex: progressProvider.currentProgress!.currentExerciseIndex,
+                        initialSet: progressProvider.currentProgress!.currentSet,
+                        completedSets: progressProvider.currentProgress!.completedSets,
+                      ),
+                    ),
+                  );
+                } else {
+                  await progressProvider.startNewWorkout(
+                    widget.dayNumber,
+                    workout.exercises.length,
+                  );
+                  if (!mounted) return;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActiveWorkoutScreen(
+                        workout: workout,
+                        categoryColor: widget.categoryColor,
+                      ),
+                    ),
+                  );
+                }
+              },
+              borderRadius: BorderRadius.circular(24),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(
+                        hasActiveWorkout ? Icons.play_arrow_rounded : Icons.fitness_center_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            hasActiveWorkout ? 'Resume Workout' : 'Start Workout',
+                            style: GoogleFonts.poppins(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            hasActiveWorkout 
+                                ? 'Continue your progress' 
+                                : '${workout.exercises.length} exercises • ${workout.exercises.fold(0, (sum, e) => sum + e.sets)} sets',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: Colors.white.withOpacity(0.9),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.arrow_forward_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideY(begin: 0.3, end: 0);
+      },
     );
   }
 } 
