@@ -211,317 +211,323 @@ class _PinScreenState extends State<PinScreen> with TickerProviderStateMixin {
             SafeArea(
               child: FadeTransition(
                 opacity: _fadeAnimation,
-                child: SingleChildScrollView(
-                  child: Container(
-                    height: size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom,
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Animated logo with glow effect
-                        AnimatedBuilder(
-                          animation: _pulseAnimation,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: _pulseAnimation.value,
-                              child: Container(
-                                width: isSmallScreen ? 100 : 120,
-                                height: isSmallScreen ? 100 : 120,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.3),
-                                      blurRadius: 30,
-                                      spreadRadius: 10,
-                                    ),
-                                  ],
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.all(isSmallScreen ? 15 : 20),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Colors.white.withOpacity(0.2),
-                                        Colors.white.withOpacity(0.1),
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.lock,
-                                    size: isSmallScreen ? 60 : 70,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ).animate().scale(duration: 1000.ms, curve: Curves.easeOutBack),
-                        
-                        SizedBox(height: isSmallScreen ? 25 : 30),
-                        
-                        // Title with shadow
-                        Text(
-                          'FitNova',
-                          style: GoogleFonts.raleway(
-                            fontSize: isSmallScreen ? 32 : 36,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                            letterSpacing: 2,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.3),
-                                offset: const Offset(0, 2),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                        ).animate().fadeIn(delay: 400.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
-                        
-                        const SizedBox(height: 8),
-                        
-                        // Subtitle
-                        Text(
-                          'Enter your PIN to continue',
-                          style: GoogleFonts.poppins(
-                            fontSize: isSmallScreen ? 14 : 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white.withOpacity(0.9),
-                            letterSpacing: 0.8,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.3),
-                                offset: const Offset(0, 1),
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
-                        ).animate().fadeIn(delay: 600.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
-                        
-                        SizedBox(height: isSmallScreen ? 40 : 50),
-                        
-                        // PIN Input Fields with glass effect
-                        AnimatedBuilder(
-                          animation: _shakeAnimation,
-                          builder: (context, child) {
-                            return Transform.translate(
-                              offset: Offset(
-                                isError ? _shakeAnimation.value * 15 * (1 - _shakeAnimation.value) : 0,
-                                0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: List.generate(4, (index) {
-                                  return Container(
-                                    width: isSmallScreen ? 60 : 70,
-                                    height: isSmallScreen ? 60 : 70,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: isError 
-                                          ? Colors.red.withOpacity(0.8)
-                                          : Colors.white.withOpacity(0.3),
-                                        width: 2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: isError 
-                                            ? Colors.red.withOpacity(0.3)
-                                            : Colors.white.withOpacity(0.2),
-                                          blurRadius: 15,
-                                          spreadRadius: 2,
-                                        ),
-                                      ],
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(14),
-                                      child: BackdropFilter(
-                                        filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(14),
-                                          ),
-                                          child: TextField(
-                                            controller: _controllers[index],
-                                            focusNode: _focusNodes[index],
-                                            textAlign: TextAlign.center,
-                                            keyboardType: TextInputType.number,
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter.digitsOnly,
-                                              LengthLimitingTextInputFormatter(1),
-                                            ],
-                                            style: GoogleFonts.poppins(
-                                              fontSize: isSmallScreen ? 22 : 24,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              contentPadding: EdgeInsets.zero,
-                                            ),
-                                            onChanged: (value) => _onPinChanged(value, index),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }),
-                              ),
-                            );
-                          },
-                        ).animate().fadeIn(delay: 800.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
-                        
-                        if (isError) ...[
-                          SizedBox(height: isSmallScreen ? 20 : 25),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: isSmallScreen ? 20 : 25,
-                              vertical: isSmallScreen ? 12 : 15,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Colors.red.withOpacity(0.5),
-                                width: 1,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.red.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.error_outline,
-                                  color: Colors.red,
-                                  size: isSmallScreen ? 20 : 24,
-                                ),
-                                SizedBox(width: isSmallScreen ? 8 : 10),
-                                Flexible(
-                                  child: Text(
-                                    'Incorrect PIN. Please try again.',
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.red,
-                                      fontSize: isSmallScreen ? 14 : 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.2, end: 0),
-                        ],
-                        
-                        if (isSuccess) ...[
-                          SizedBox(height: isSmallScreen ? 20 : 25),
+                child: GestureDetector(
+                  onTap: () {
+                    // Dismiss keyboard when tapping on background
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: SingleChildScrollView(
+                    child: Container(
+                      height: size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom,
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Animated logo with glow effect
                           AnimatedBuilder(
-                            animation: _successScaleAnimation,
+                            animation: _pulseAnimation,
                             builder: (context, child) {
                               return Transform.scale(
-                                scale: _successScaleAnimation.value,
+                                scale: _pulseAnimation.value,
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: isSmallScreen ? 20 : 25,
-                                    vertical: isSmallScreen ? 12 : 15,
-                                  ),
+                                  width: isSmallScreen ? 100 : 120,
+                                  height: isSmallScreen ? 100 : 120,
                                   decoration: BoxDecoration(
-                                    color: Colors.green.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                      color: Colors.green.withOpacity(0.5),
-                                      width: 1,
-                                    ),
+                                    shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.green.withOpacity(0.2),
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
+                                        color: Colors.white.withOpacity(0.3),
+                                        blurRadius: 30,
+                                        spreadRadius: 10,
                                       ),
                                     ],
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                        size: isSmallScreen ? 20 : 24,
+                                  child: Container(
+                                    padding: EdgeInsets.all(isSmallScreen ? 15 : 20),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.white.withOpacity(0.2),
+                                          Colors.white.withOpacity(0.1),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
                                       ),
-                                      SizedBox(width: isSmallScreen ? 8 : 10),
-                                      Text(
-                                        'PIN Correct!',
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.green,
-                                          fontSize: isSmallScreen ? 14 : 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
+                                    child: Icon(
+                                      Icons.lock,
+                                      size: isSmallScreen ? 60 : 70,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               );
                             },
-                          ),
+                          ).animate().scale(duration: 1000.ms, curve: Curves.easeOutBack),
+                          
+                          SizedBox(height: isSmallScreen ? 55 : 70),
+                          
+                          // Title with shadow
+                          Text(
+                            'FitNova',
+                            style: GoogleFonts.raleway(
+                              fontSize: isSmallScreen ? 32 : 36,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 2,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  offset: const Offset(0, 2),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                          ).animate().fadeIn(delay: 400.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
+                          
+                          const SizedBox(height: 8),
+                          
+                          // Subtitle
+                          Text(
+                            'Enter your PIN to continue',
+                            style: GoogleFonts.poppins(
+                              fontSize: isSmallScreen ? 14 : 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white.withOpacity(0.9),
+                              letterSpacing: 0.8,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  offset: const Offset(0, 1),
+                                  blurRadius: 2,
+                                ),
+                              ],
+                            ),
+                          ).animate().fadeIn(delay: 600.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
+                          
+                          SizedBox(height: isSmallScreen ? 40 : 50),
+                          
+                          // PIN Input Fields with glass effect
+                          AnimatedBuilder(
+                            animation: _shakeAnimation,
+                            builder: (context, child) {
+                              return Transform.translate(
+                                offset: Offset(
+                                  isError ? _shakeAnimation.value * 15 * (1 - _shakeAnimation.value) : 0,
+                                  0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: List.generate(4, (index) {
+                                    return Container(
+                                      width: isSmallScreen ? 60 : 70,
+                                      height: isSmallScreen ? 60 : 70,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: isError 
+                                            ? Colors.red.withOpacity(0.8)
+                                            : Colors.white.withOpacity(0.3),
+                                          width: 2,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: isError 
+                                              ? Colors.red.withOpacity(0.3)
+                                              : Colors.white.withOpacity(0.2),
+                                            blurRadius: 15,
+                                            spreadRadius: 2,
+                                          ),
+                                        ],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(14),
+                                        child: BackdropFilter(
+                                          filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withOpacity(0.1),
+                                              borderRadius: BorderRadius.circular(14),
+                                            ),
+                                            child: TextField(
+                                              controller: _controllers[index],
+                                              focusNode: _focusNodes[index],
+                                              textAlign: TextAlign.center,
+                                              keyboardType: TextInputType.number,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter.digitsOnly,
+                                                LengthLimitingTextInputFormatter(1),
+                                              ],
+                                              style: GoogleFonts.poppins(
+                                                fontSize: isSmallScreen ? 22 : 24,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                contentPadding: EdgeInsets.zero,
+                                              ),
+                                              onChanged: (value) => _onPinChanged(value, index),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              );
+                            },
+                          ).animate().fadeIn(delay: 800.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
+                          
+                          if (isError) ...[
+                            SizedBox(height: isSmallScreen ? 20 : 25),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isSmallScreen ? 20 : 25,
+                                vertical: isSmallScreen ? 12 : 15,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: Colors.red.withOpacity(0.5),
+                                  width: 1,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.red.withOpacity(0.2),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.error_outline,
+                                    color: Colors.red,
+                                    size: isSmallScreen ? 20 : 24,
+                                  ),
+                                  SizedBox(width: isSmallScreen ? 8 : 10),
+                                  Flexible(
+                                    child: Text(
+                                      'Incorrect PIN. Please try again.',
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.red,
+                                        fontSize: isSmallScreen ? 14 : 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.2, end: 0),
+                          ],
+                          
+                          if (isSuccess) ...[
+                            SizedBox(height: isSmallScreen ? 20 : 25),
+                            AnimatedBuilder(
+                              animation: _successScaleAnimation,
+                              builder: (context, child) {
+                                return Transform.scale(
+                                  scale: _successScaleAnimation.value,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isSmallScreen ? 20 : 25,
+                                      vertical: isSmallScreen ? 12 : 15,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.green.withOpacity(0.5),
+                                        width: 1,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.green.withOpacity(0.2),
+                                          blurRadius: 10,
+                                          spreadRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                          size: isSmallScreen ? 20 : 24,
+                                        ),
+                                        SizedBox(width: isSmallScreen ? 8 : 10),
+                                        Text(
+                                          'PIN Correct!',
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.green,
+                                            fontSize: isSmallScreen ? 14 : 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                          
+                          const Spacer(),
+                          
+                          // Forgot PIN button with glass effect
+                          // Container(
+                          //   width: double.infinity,
+                          //   height: isSmallScreen ? 50 : 55,
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white.withOpacity(0.15),
+                          //     borderRadius: BorderRadius.circular(15),
+                          //     border: Border.all(
+                          //       color: Colors.white.withOpacity(0.3),
+                          //       width: 1,
+                          //     ),
+                          //     boxShadow: [
+                          //       BoxShadow(
+                          //         color: Colors.white.withOpacity(0.1),
+                          //         blurRadius: 15,
+                          //         spreadRadius: 2,
+                          //       ),
+                          //     ],
+                          //   ),
+                          //   child: ClipRRect(
+                          //     borderRadius: BorderRadius.circular(14),
+                          //     child: BackdropFilter(
+                          //       filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          //       child: Material(
+                          //         color: Colors.transparent,
+                          //         child: InkWell(
+                          //           borderRadius: BorderRadius.circular(14),
+                          //           onTap: () {
+                          //             // You can add forgot PIN functionality here
+                          //           },
+                          //           child: Center(
+                          //             child: Text(
+                          //               'Forgot PIN?',
+                          //               style: GoogleFonts.poppins(
+                          //                 color: Colors.white,
+                          //                 fontSize: isSmallScreen ? 16 : 18,
+                          //                 fontWeight: FontWeight.w600,
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ).animate().fadeIn(delay: 1000.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
                         ],
-                        
-                        const Spacer(),
-                        
-                        // Forgot PIN button with glass effect
-                        // Container(
-                        //   width: double.infinity,
-                        //   height: isSmallScreen ? 50 : 55,
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.white.withOpacity(0.15),
-                        //     borderRadius: BorderRadius.circular(15),
-                        //     border: Border.all(
-                        //       color: Colors.white.withOpacity(0.3),
-                        //       width: 1,
-                        //     ),
-                        //     boxShadow: [
-                        //       BoxShadow(
-                        //         color: Colors.white.withOpacity(0.1),
-                        //         blurRadius: 15,
-                        //         spreadRadius: 2,
-                        //       ),
-                        //     ],
-                        //   ),
-                        //   child: ClipRRect(
-                        //     borderRadius: BorderRadius.circular(14),
-                        //     child: BackdropFilter(
-                        //       filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        //       child: Material(
-                        //         color: Colors.transparent,
-                        //         child: InkWell(
-                        //           borderRadius: BorderRadius.circular(14),
-                        //           onTap: () {
-                        //             // You can add forgot PIN functionality here
-                        //           },
-                        //           child: Center(
-                        //             child: Text(
-                        //               'Forgot PIN?',
-                        //               style: GoogleFonts.poppins(
-                        //                 color: Colors.white,
-                        //                 fontSize: isSmallScreen ? 16 : 18,
-                        //                 fontWeight: FontWeight.w600,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ).animate().fadeIn(delay: 1000.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
-                      ],
+                      ),
                     ),
                   ),
                 ),
