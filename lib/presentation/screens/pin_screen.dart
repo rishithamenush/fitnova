@@ -251,7 +251,7 @@ class _PinScreenState extends State<PinScreen> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   child: Icon(
-                                    Icons.fitness_center,
+                                    Icons.lock,
                                     size: isSmallScreen ? 60 : 70,
                                     color: Colors.white,
                                   ),
@@ -477,50 +477,50 @@ class _PinScreenState extends State<PinScreen> with TickerProviderStateMixin {
                         const Spacer(),
                         
                         // Forgot PIN button with glass effect
-                        Container(
-                          width: double.infinity,
-                          height: isSmallScreen ? 50 : 55,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
-                              width: 1,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white.withOpacity(0.1),
-                                blurRadius: 15,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(14),
-                            child: BackdropFilter(
-                              filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(14),
-                                  onTap: () {
-                                    // You can add forgot PIN functionality here
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      'Forgot PIN?',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontSize: isSmallScreen ? 16 : 18,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ).animate().fadeIn(delay: 1000.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
+                        // Container(
+                        //   width: double.infinity,
+                        //   height: isSmallScreen ? 50 : 55,
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white.withOpacity(0.15),
+                        //     borderRadius: BorderRadius.circular(15),
+                        //     border: Border.all(
+                        //       color: Colors.white.withOpacity(0.3),
+                        //       width: 1,
+                        //     ),
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: Colors.white.withOpacity(0.1),
+                        //         blurRadius: 15,
+                        //         spreadRadius: 2,
+                        //       ),
+                        //     ],
+                        //   ),
+                        //   child: ClipRRect(
+                        //     borderRadius: BorderRadius.circular(14),
+                        //     child: BackdropFilter(
+                        //       filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        //       child: Material(
+                        //         color: Colors.transparent,
+                        //         child: InkWell(
+                        //           borderRadius: BorderRadius.circular(14),
+                        //           onTap: () {
+                        //             // You can add forgot PIN functionality here
+                        //           },
+                        //           child: Center(
+                        //             child: Text(
+                        //               'Forgot PIN?',
+                        //               style: GoogleFonts.poppins(
+                        //                 color: Colors.white,
+                        //                 fontSize: isSmallScreen ? 16 : 18,
+                        //                 fontWeight: FontWeight.w600,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ).animate().fadeIn(delay: 1000.ms, duration: 800.ms).slideY(begin: 0.3, end: 0),
                       ],
                     ),
                   ),
