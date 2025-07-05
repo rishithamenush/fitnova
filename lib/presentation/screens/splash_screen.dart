@@ -1,4 +1,4 @@
-import 'package:fitnova/presentation/screens/main_screen.dart';
+import 'package:fitnova/presentation/screens/pin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnova/presentation/screens/home_screen.dart';
 import 'package:fitnova/presentation/widgets/splash_widgets.dart';
@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
 
     _controller.forward();
-    _navigateToHome();
+    _navigateToPin();
   }
 
   @override
@@ -41,16 +41,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.dispose();
   }
 
-  Future<void> _navigateToHome() async {
-    print('SplashScreen: _navigateToHome called');
+  Future<void> _navigateToPin() async {
+    print('SplashScreen: _navigateToPin called');
     await Future.delayed(const Duration(seconds: 5));
     if (!mounted) {
       print('SplashScreen: Widget not mounted, skipping navigation');
       return;
     }
-    print('SplashScreen: Navigating to MainScreen');
+    print('SplashScreen: Navigating to PinScreen');
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const MainScreen()),
+      MaterialPageRoute(builder: (context) => const PinScreen()),
     );
   }
 
