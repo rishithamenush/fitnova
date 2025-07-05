@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsProvider extends ChangeNotifier {
   static const String _restTimeKey = 'rest_time';
-  int _restTime = 30; // Default 30 seconds
+  int _restTime = 10; // Default 30 seconds
 
   SettingsProvider() {
     _loadSettings();
@@ -14,7 +14,7 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    _restTime = prefs.getInt(_restTimeKey) ?? 30;
+    _restTime = prefs.getInt(_restTimeKey) ?? 10;
     notifyListeners();
   }
 

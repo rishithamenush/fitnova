@@ -5,6 +5,7 @@ import 'presentation/screens/splash_screen.dart';
 import 'data/repositories/workout_repository_impl.dart';
 import 'presentation/screens/workout_screen.dart';
 import 'providers/workout_progress_provider.dart';
+import 'providers/workout_history_provider.dart';
 
 void main() {
   runApp(
@@ -12,6 +13,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
         ChangeNotifierProvider(create: (_) => WorkoutProgressProvider()),
+        ChangeNotifierProvider(create: (_) => WorkoutHistoryProvider()),
       ],
       child: const MyApp(),
     ),
